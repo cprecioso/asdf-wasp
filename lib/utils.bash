@@ -31,28 +31,6 @@ list_all_versions() {
 	list_github_tags
 }
 
-download_specific_release() {
-	local version platform arch filename
-	version="$1"
-	platform="$2"
-	arch="$3"
-	filename="$4"
-
-	local asset_name="wasp-${platform}-${arch}.tar.gz"
-	local url="$GH_REPO/releases/download/v${version}/$asset_name"
-
-	echo "* Checking download for $TOOL_NAME release $version ($platform, $arch)..."
-	local code
-	code=$(curl -I -o /dev/null -w "%{http_code}" "$url")
-	if [ "$code" = "404" ]; then
-		echo "** Release not found at $url."
-		false
-	fi
-
-	echo "* Trying download for $TOOL_NAME release $version ($platform, $arch)..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url"
-}
-
 download_release() {
 	local version filename url
 	version="$1"
@@ -79,8 +57,11 @@ download_release() {
 
 	for p in "${platform[@]}"; do
 		for a in "${arch[@]}"; do
-			download_specific_release "$version" "$p" "$a" "$filename" || continue
-			echo "* Downloaded wasp release $version for platform $p and architecture $a."
+			local url="$GH_REPO/releases/download/v${version}/wasp-${p}-${a}.tar.gz"
+
+			echo "* Downloading $TOOL_NAME release ""$version"" ($p, $a)..."
+			curl "${curl_opts[@]}" -o "$filename" -C - "$url" || continue
+			echo "* Downloaded wasp release $version ($p, $a)."
 			return
 		done
 	done
