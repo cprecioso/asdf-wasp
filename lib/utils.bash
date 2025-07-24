@@ -42,7 +42,7 @@ download_specific_release() {
 	local url="$GH_REPO/releases/download/v${version}/$asset_name"
 
 	echo "* Trying download for $TOOL_NAME release $version ($platform, $arch)..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || echo "** Could not download $url."
+	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || { echo "** Could not download $url." && false; }
 }
 
 download_release() {
