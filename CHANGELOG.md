@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.4](https://github.com/cprecioso/asdf-wasp/compare/v1.0.3...v1.0.4) (2025-07-24)
+
+
+### Bug Fixes
+
+* ignore starting ^ ([e34b429](https://github.com/cprecioso/asdf-wasp/commit/e34b42983256bf0a44940efcc80cae0fcb482cae))
+* simpler download logic ([0ca3b46](https://github.com/cprecioso/asdf-wasp/commit/0ca3b46af09872de149b1abdf425598834f5fa3a))
+* stricter tag listing ([582f4e4](https://github.com/cprecioso/asdf-wasp/commit/582f4e4fb542e549e1d13670ae9b8d7d636845d7))
+
 ## [1.0.3](https://github.com/cprecioso/asdf-wasp/compare/v1.0.2...v1.0.3) (2025-07-24)
 
 
