@@ -41,8 +41,16 @@ download_specific_release() {
 	local asset_name="wasp-${platform}-${arch}.tar.gz"
 	local url="$GH_REPO/releases/download/v${version}/$asset_name"
 
+	echo "* Checking download for $TOOL_NAME release $version ($platform, $arch)..."
+	local code
+	code=$(curl -I -o /dev/null -w "%{http_code}" "$url")
+	if [ "$code" = "404" ]; then
+		echo "** Release not found at $url."
+		false
+	fi
+
 	echo "* Trying download for $TOOL_NAME release $version ($platform, $arch)..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || { echo "** Could not download $url." && false; }
+	curl "${curl_opts[@]}" -o "$filename" -C - "$url"
 }
 
 download_release() {
