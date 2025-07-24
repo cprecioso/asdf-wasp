@@ -62,7 +62,7 @@ download_release() {
 
 	case "$(uname -m)" in
 	x86_64) arch=("x86_64" "universal") ;;
-	arm64) arch=("arm64" "universal" "x86_64") ;;
+	arm64) arch=("aarch64" "universal" "x86_64") ;;
 	*)
 		echo "Unsupported architecture" >&2
 		exit 1
