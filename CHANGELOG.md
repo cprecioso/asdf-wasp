@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/cprecioso/asdf-wasp/compare/v1.0.1...v1.0.2) (2025-07-24)
+
+
+### Bug Fixes
+
+* improve `^` versions ([0f88670](https://github.com/cprecioso/asdf-wasp/commit/0f88670440bd8e4eda86e5704a867908e095785b))
+
 ## [1.0.1](https://github.com/cprecioso/asdf-wasp/compare/v1.0.0...v1.0.1) (2025-07-24)
 
 
