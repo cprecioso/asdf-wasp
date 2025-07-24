@@ -23,8 +23,8 @@ sort_versions() {
 
 list_github_tags() {
 	git ls-remote --tags --refs "$GH_REPO" |
-		grep -o 'refs/tags/.*' | cut -d/ -f3- |
-		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+		grep -Eo 'refs/tags/v[0-9]+\.[0-9]+\.[0-9]+.*' | cut -d/ -f3 |
+		sed 's/^v//'
 }
 
 list_all_versions() {
