@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+file_path=$1
+
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+
+# shellcheck source=./lib/utils.bash
+source "${plugin_dir}/lib/utils.bash"
+
+if [[ -f "$file_path" ]]; then
+	version=$(grep -E 'version:[[:space:]]*"([^"]+)"' "$file_path" | sed -E 's/.*version:[[:space:]]*"([^"]+)".*/\1/')
+	if [[ -n "$version" ]]; then
+		echo "$version"
+	else
+		fail "No version found in $file_path"
+	fi
+else
+	fail "File not found: $file_path"
+fi
