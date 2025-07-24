@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/cprecioso/asdf-wasp/compare/v1.0.2...v1.0.3) (2025-07-24)
+
+
+### Bug Fixes
+
+* explicitly check 404 when trying downloads ([b3f308d](https://github.com/cprecioso/asdf-wasp/commit/b3f308d587b1911bbba188a84fc661fcd1e00015))
+* rename arm architecture ([6ca588f](https://github.com/cprecioso/asdf-wasp/commit/6ca588f004363fb96f52f898b472bab17c4f8aa7))
+
 ## [1.0.2](https://github.com/cprecioso/asdf-wasp/compare/v1.0.1...v1.0.2) (2025-07-24)
 
 
