@@ -11,9 +11,17 @@ plugin_dir=$(dirname "$(dirname "$current_script_path")")
 source "${plugin_dir}/lib/utils.bash"
 
 if [[ -f "$file_path" ]]; then
+	# Find `version: "(.+)"`
 	version=$(grep -E 'version:[[:space:]]*"([^"]+)"' "$file_path" | sed -E 's/.*version:[[:space:]]*"([^"]+)".*/\1/')
+
 	if [[ -n "$version" ]]; then
-		echo "$version"
+		if [[ "$version" == ^* ]]; then
+			# If version starts with ^, we just take the first number before the dot
+			echo "$version" | sed -E 's/^\^([0-9]+)\..*/\1/'
+		else
+			# Otherwise just print the version
+			echo "$version"
+		fi
 	else
 		fail "No version found in $file_path"
 	fi
