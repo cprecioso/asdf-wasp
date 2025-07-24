@@ -2,10 +2,8 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for wasp.
 GH_REPO="https://github.com/wasp-lang/wasp"
 TOOL_NAME="wasp"
-TOOL_TEST="wasp version"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -14,7 +12,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if wasp is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
 	curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -31,8 +28,6 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if wasp has other means of determining installable versions.
 	list_github_tags
 }
 
@@ -41,8 +36,13 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for wasp
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	if [[ "$OSTYPE" == "linux"* ]]; then
+		asset_name="wasp-linux-x86_64.tar.gz"
+	elif [[ "$OSTYPE" == "darwin"* ]]; then
+		asset_name="wasp-macos-x86_64.tar.gz"
+	fi
+
+	url="$GH_REPO/releases/download/v${version}/$asset_name"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -51,7 +51,7 @@ download_release() {
 install_version() {
 	local install_type="$1"
 	local version="$2"
-	local install_path="${3%/bin}/bin"
+	local install_path="${3%/bin}"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-$TOOL_NAME supports release installs only"
@@ -59,12 +59,12 @@ install_version() {
 
 	(
 		mkdir -p "$install_path"
-		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		mkdir -p "$install_path/bin"
 
-		# TODO: Assert wasp executable exists.
-		local tool_cmd
-		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+		cp "$ASDF_DOWNLOAD_PATH/wasp-bin" "$install_path/bin/wasp"
+		chmod +x "$install_path/bin/wasp"
+
+		cp -r "$ASDF_DOWNLOAD_PATH/data" "$install_path/data"
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (

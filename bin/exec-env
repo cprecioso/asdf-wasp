@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [ "${waspc_datadir:-}" = "" ]; then
+	export waspc_datadir=$ASDF_INSTALL_PATH/data
+fi
