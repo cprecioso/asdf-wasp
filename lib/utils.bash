@@ -31,21 +31,53 @@ list_all_versions() {
 	list_github_tags
 }
 
+download_specific_release() {
+	local version platform arch filename
+	version="$1"
+	platform="$2"
+	arch="$3"
+	filename="$4"
+
+	local asset_name="wasp-${platform}-${arch}.tar.gz"
+	local url="$GH_REPO/releases/download/v${version}/$asset_name"
+
+	echo "* Trying download for $TOOL_NAME release $version ($platform, $arch)..."
+	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || echo "** Could not download $url."
+}
+
 download_release() {
 	local version filename url
 	version="$1"
 	filename="$2"
 
-	if [[ "$OSTYPE" == "linux"* ]]; then
-		asset_name="wasp-linux-x86_64.tar.gz"
-	elif [[ "$OSTYPE" == "darwin"* ]]; then
-		asset_name="wasp-macos-x86_64.tar.gz"
-	fi
+	# Detect platform
+	case "$(uname -s)" in
+	Darwin*) platform=("macos") ;;
+	Linux*) platform=("linux-static" "linux") ;;
+	*)
+		echo "Unsupported platform" >&2
+		exit 1
+		;;
+	esac
 
-	url="$GH_REPO/releases/download/v${version}/$asset_name"
+	case "$(uname -m)" in
+	x86_64) arch=("x86_64" "universal") ;;
+	arm64) arch=("arm64" "universal" "x86_64") ;;
+	*)
+		echo "Unsupported architecture" >&2
+		exit 1
+		;;
+	esac
 
-	echo "* Downloading $TOOL_NAME release $version..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+	for p in "${platform[@]}"; do
+		for a in "${arch[@]}"; do
+			download_specific_release "$version" "$p" "$a" "$filename" || continue
+			echo "* Downloaded wasp release $version for platform $p and architecture $a."
+			return
+		done
+	done
+
+	fail "Failed to download $TOOL_NAME release $version for platform $(uname -s) and architecture $(uname -m)."
 }
 
 install_version() {
