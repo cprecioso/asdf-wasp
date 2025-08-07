@@ -27,7 +27,7 @@ Plugin:
 ```shell
 asdf plugin add wasp
 # or
-asdf plugin add wasp https://github.com/cprecioso/asdf-wasp.git
+asdf plugin add wasp https://github.com/wasp-lang/asdf-wasp.git
 ```
 
 wasp:
